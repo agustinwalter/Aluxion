@@ -7,9 +7,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^1.1.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
 flutter:
   uses-material-design: true
+  assets:
+    - assets/svg/
+    - assets/png/
+  fonts:
+    - family: Museo Sans
+      fonts:
+        - asset: assets/fonts/MuseoSans/MuseoSans-100.otf
+        - asset: assets/fonts/MuseoSans/MuseoSans-300.otf
+        - asset: assets/fonts/MuseoSans/MuseoSans-500.otf
+        - asset: assets/fonts/MuseoSans/MuseoSans-700.otf

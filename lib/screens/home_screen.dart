@@ -1,11 +1,49 @@
 import 'dart:ui';
 import 'dart:math' as math;
+import 'package:agustin_walter_aluxion/api/aluxion_api.dart';
+import 'package:agustin_walter_aluxion/models/unsplash_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../widgets/photo_preview.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<UnsplashImage> _images = [];
+  final ScrollController _scrollController = ScrollController();
+  int _nextPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getRandomImages();
+    _scrollController.addListener(() {
+      // It starts to load the images before reaching the end of the scroll.
+      if (_scrollController.offset >
+              (_scrollController.position.maxScrollExtent - 512) &&
+          !_scrollController.position.outOfRange) {
+        _nextPage++;
+        _getRandomImages(_nextPage);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _getRandomImages([int page = 0]) {
+    AluxionApi().getRandomImages(page: page).then((images) {
+      setState(() => _images.addAll(images));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +51,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           const SliverToBoxAdapter(child: SizedBox(height: 26)),
           SliverPersistentHeader(
@@ -67,10 +106,10 @@ class HomeScreen extends StatelessWidget {
                       bottom: isEven ? 26 : 0,
                       top: isEven ? 0 : 26,
                     ),
-                    child: const PhotoPreview(),
+                    child: PhotoPreview(image: _images[index]),
                   );
                 },
-                childCount: 1,
+                childCount: _images.length,
               ),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,

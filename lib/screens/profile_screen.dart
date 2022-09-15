@@ -68,22 +68,22 @@ class ProfileScreen extends StatelessWidget {
                     childAspectRatio: .6189,
                     crossAxisSpacing: 26,
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 26),
-                        child: const PhotoPreview(),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 26),
-                        child: const PhotoPreview(),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 26),
-                        child: const PhotoPreview(),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 26),
-                        child: const PhotoPreview(),
-                      ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(bottom: 26),
+                      //   child: const PhotoPreview(),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(top: 26),
+                      //   child: const PhotoPreview(),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(bottom: 26),
+                      //   child: const PhotoPreview(),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(top: 26),
+                      //   child: const PhotoPreview(),
+                      // ),
                     ],
                   ),
                 ],

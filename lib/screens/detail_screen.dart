@@ -1,9 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import '../models/unsplash_image.dart';
 import '../widgets/custom_close_button.dart';
 
 class DetailScreen extends StatelessWidget {
-  const DetailScreen({super.key});
+  const DetailScreen({super.key, required this.image});
+
+  final UnsplashImage image;
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +14,9 @@ class DetailScreen extends StatelessWidget {
       body: Stack(
         children: [
           Hero(
-            tag: '1',
+            tag: image.id,
             child: Image.network(
-              'https://images.unsplash.com/photo-1663084317296-bd1cfb037bbf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+              image.imageUrl,
               height: double.infinity,
               width: double.infinity,
               fit: BoxFit.cover,

@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:agustin_walter_aluxion/models/unsplash_image.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 class AluxionApi {
   final _unsplashClientId =
       'a2f508640cb62f314e0e0763594d40aab1c858a7ef796184067c537a88b276aa';
+  final _uuid = const Uuid();
 
   Future<List<UnsplashImage>> getRandomImages({int page = 0}) async {
     final url = Uri.https(
@@ -20,7 +22,7 @@ class AluxionApi {
       final body = jsonDecode(response.body);
       return (body as List)
           .map((imageData) => UnsplashImage(
-                id: imageData['id'],
+                id: _uuid.v1(),
                 imageUrl: imageData['urls']['regular'],
               ))
           .toList();

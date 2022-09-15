@@ -5,10 +5,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class PhotoPreview extends StatelessWidget {
-  const PhotoPreview({super.key, required this.image, required this.index});
+  const PhotoPreview({
+    super.key,
+    required this.image,
+    required this.index,
+    required this.homeImages,
+  });
 
   final UnsplashImage image;
   final int index;
+  final bool homeImages;
 
   static const double _aspectRadio = 1.4437;
   static const double _aspectRadioShadow = .3907;
@@ -20,8 +26,11 @@ class PhotoPreview extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(initialPage: index),
+          CustomPageRoute(
+            builder: (context) => DetailScreen(
+              initialPage: index,
+              homeImages: homeImages,
+            ),
           ),
         );
       },
@@ -109,4 +118,11 @@ class PhotoPreview extends StatelessWidget {
       ),
     );
   }
+}
+
+class CustomPageRoute extends MaterialPageRoute {
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 500);
+
+  CustomPageRoute({builder}) : super(builder: builder);
 }

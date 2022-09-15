@@ -23,14 +23,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _aluxionProvider = Provider.of<AluxionProvider>(context, listen: false);
-    _aluxionProvider.loadHomeImages();
+    _aluxionProvider.loadUserImages();
     _scrollController.addListener(() {
       // It starts to load the images before reaching the end of the scroll.
       if (_scrollController.offset >
               (_scrollController.position.maxScrollExtent - 512) &&
           !_scrollController.position.outOfRange) {
         _nextPage++;
-        _aluxionProvider.loadHomeImages(_nextPage);
+        _aluxionProvider.loadUserImages(_nextPage);
       }
       if (_scrollController.offset > 120) {
         setState(() => _showAppbarTitle = true);
@@ -74,10 +74,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 26),
-                          child: SvgPicture.asset(
-                            'assets/svg/close.svg',
-                            width: 36,
-                            color: Colors.black,
+                          child: GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: SvgPicture.asset(
+                              'assets/svg/close.svg',
+                              width: 36,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                         if (_showAppbarTitle)
@@ -151,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          const ListOfImages(),
+          const ListOfImages(homeImages: false),
         ],
       ),
     );

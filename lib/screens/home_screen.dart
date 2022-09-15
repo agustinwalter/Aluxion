@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                     child: const PhotoPreview(),
                   );
                 },
-                childCount: 20,
+                childCount: 1,
               ),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -103,7 +103,8 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => math.max(maxHeight, minHeight);
 
   @override
-  Widget build(_, __, ___) => SizedBox.expand(child: child);
+  Widget build(context, shrinkOffset, overlapsContent) =>
+      SizedBox.expand(child: child);
 
   @override
   bool shouldRebuild(SliverAppBarDelegate oldDelegate) =>

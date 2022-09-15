@@ -5,9 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class PhotoPreview extends StatelessWidget {
-  const PhotoPreview({super.key, required this.image});
+  const PhotoPreview({super.key, required this.image, required this.index});
 
   final UnsplashImage image;
+  final int index;
 
   static const double _aspectRadio = 1.4437;
   static const double _aspectRadioShadow = .3907;
@@ -20,7 +21,7 @@ class PhotoPreview extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => DetailScreen(image: image),
+            builder: (context) => DetailScreen(initialPage: index),
           ),
         );
       },

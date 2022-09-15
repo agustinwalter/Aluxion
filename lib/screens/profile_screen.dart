@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:agustin_walter_aluxion/widgets/list_of_images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../api/aluxion_api.dart';
-import '../models/unsplash_image.dart';
+import 'package:provider/provider.dart';
+import '../providers/aluxion_provider.dart';
 import 'home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -14,22 +14,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final List<UnsplashImage> _images = [];
   final ScrollController _scrollController = ScrollController();
   int _nextPage = 0;
   bool _showAppbarTitle = false;
+  late AluxionProvider _aluxionProvider;
 
   @override
   void initState() {
     super.initState();
-    _getRandomImages();
+    _aluxionProvider = Provider.of<AluxionProvider>(context, listen: false);
+    _aluxionProvider.loadHomeImages();
     _scrollController.addListener(() {
       // It starts to load the images before reaching the end of the scroll.
       if (_scrollController.offset >
               (_scrollController.position.maxScrollExtent - 512) &&
           !_scrollController.position.outOfRange) {
         _nextPage++;
-        _getRandomImages(_nextPage);
+        _aluxionProvider.loadHomeImages(_nextPage);
       }
       if (_scrollController.offset > 120) {
         setState(() => _showAppbarTitle = true);
@@ -43,12 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _getRandomImages([int page = 0]) {
-    AluxionApi().getRandomImages(page: page).then((images) {
-      setState(() => _images.addAll(images));
-    });
   }
 
   @override
@@ -156,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          ListOfImages(images: _images),
+          const ListOfImages(),
         ],
       ),
     );

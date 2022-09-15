@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'dart:math' as math;
-import 'package:agustin_walter_aluxion/api/aluxion_api.dart';
-import 'package:agustin_walter_aluxion/models/unsplash_image.dart';
+import 'package:agustin_walter_aluxion/providers/aluxion_provider.dart';
 import 'package:agustin_walter_aluxion/widgets/list_of_images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,21 +14,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<UnsplashImage> _images = [];
   final ScrollController _scrollController = ScrollController();
   int _nextPage = 0;
+  late AluxionProvider _aluxionProvider;
 
   @override
   void initState() {
     super.initState();
-    _getRandomImages();
+    _aluxionProvider = Provider.of<AluxionProvider>(context, listen: false);
+    _aluxionProvider.loadHomeImages();
     _scrollController.addListener(() {
       // It starts to load the images before reaching the end of the scroll.
       if (_scrollController.offset >
               (_scrollController.position.maxScrollExtent - 512) &&
           !_scrollController.position.outOfRange) {
         _nextPage++;
-        _getRandomImages(_nextPage);
+        _aluxionProvider.loadHomeImages(_nextPage);
       }
     });
   }
@@ -37,12 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _getRandomImages([int page = 0]) {
-    AluxionApi().getRandomImages(page: page).then((images) {
-      setState(() => _images.addAll(images));
-    });
   }
 
   @override
@@ -95,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          ListOfImages(images: _images)
+          const ListOfImages(),
         ],
       ),
     );

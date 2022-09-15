@@ -4,5 +4,5 @@ class UnsplashImage {
 
   UnsplashImage({required this.id, required this.imageUrl});
 
-  String get imagePreviewUrl => '$imageUrl&h=512';
+  String get imagePreviewUrl => '$imageUrl&h=300';
 }

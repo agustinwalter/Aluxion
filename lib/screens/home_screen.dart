@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'dart:math' as math;
 import 'package:agustin_walter_aluxion/api/aluxion_api.dart';
 import 'package:agustin_walter_aluxion/models/unsplash_image.dart';
+import 'package:agustin_walter_aluxion/widgets/list_of_images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../widgets/photo_preview.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -95,29 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.all(26),
-            sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (_, index) {
-                  final bool isEven = index % 2 == 0;
-                  return Container(
-                    margin: EdgeInsets.only(
-                      bottom: isEven ? 26 : 0,
-                      top: isEven ? 0 : 26,
-                    ),
-                    child: PhotoPreview(image: _images[index]),
-                  );
-                },
-                childCount: _images.length,
-              ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: .6189,
-                crossAxisSpacing: 26,
-              ),
-            ),
-          ),
+          ListOfImages(images: _images)
         ],
       ),
     );

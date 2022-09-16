@@ -69,116 +69,112 @@ class _DetailScreenState extends State<DetailScreen> {
               initialPage: widget.initialPage,
             ),
             items: images.map((image) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return CachedNetworkImage(
-                    fadeInDuration: const Duration(microseconds: 1),
-                    fadeOutDuration: const Duration(microseconds: 1),
-                    placeholderFadeInDuration: const Duration(microseconds: 1),
-                    fadeInCurve: Curves.linear,
-                    fadeOutCurve: Curves.linear,
-                    imageUrl: image.imageUrl,
-                    imageBuilder: (_, imageProvider) => Stack(
-                      children: [
-                        Hero(
-                          tag: image.heroId,
-                          child: Image(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
+              return CachedNetworkImage(
+                fadeInDuration: const Duration(microseconds: 1),
+                fadeOutDuration: const Duration(microseconds: 1),
+                placeholderFadeInDuration: const Duration(microseconds: 1),
+                fadeInCurve: Curves.linear,
+                fadeOutCurve: Curves.linear,
+                imageUrl: image.imageUrl,
+                imageBuilder: (_, imageProvider) => Stack(
+                  children: [
+                    Hero(
+                      tag: image.heroId,
+                      child: Image(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      top: MediaQuery.of(context).padding.top + _closeTop,
+                      left: 26,
+                      duration: _duration,
+                      child: AnimatedOpacity(
+                        opacity: _opacity,
+                        duration: _duration,
+                        child: GestureDetector(
+                          onTap: _descriptionVisible
+                              ? () => Navigator.pop(context)
+                              : null,
+                          child: SvgPicture.asset(
+                            'assets/svg/close.svg',
+                            width: 37,
                           ),
                         ),
-                        AnimatedPositioned(
-                          top: MediaQuery.of(context).padding.top + _closeTop,
-                          left: 26,
-                          duration: _duration,
-                          child: AnimatedOpacity(
-                            opacity: _opacity,
-                            duration: _duration,
-                            child: GestureDetector(
-                              onTap: _descriptionVisible
-                                  ? () => Navigator.pop(context)
-                                  : null,
-                              child: SvgPicture.asset(
-                                'assets/svg/close.svg',
-                                width: 37,
-                              ),
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      bottom: _shadowBottom,
+                      duration: _duration,
+                      child: AnimatedOpacity(
+                        opacity: _opacity,
+                        duration: _duration,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 26,
+                            vertical: 33,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(.2),
+                                Colors.black.withOpacity(.7),
+                              ],
                             ),
                           ),
-                        ),
-                        AnimatedPositioned(
-                          bottom: _shadowBottom,
-                          duration: _duration,
-                          child: AnimatedOpacity(
-                            opacity: _opacity,
-                            duration: _duration,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding:
-                                  const EdgeInsets.fromLTRB(26, 33, 26, 33),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.black.withOpacity(.2),
-                                    Colors.black.withOpacity(.7),
-                                  ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                image.description,
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 42,
+                                  height: 1.17,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  overflow: TextOverflow.clip,
                                 ),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    image.description,
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      fontSize: 42,
-                                      height: 1.17,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      overflow: TextOverflow.clip,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    '${image.likes} likes',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      height: 1.17,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 26),
-                                  UserPreview(
-                                    homeImages: widget.homeImages,
-                                    user: image.user,
-                                  ),
-                                ],
+                              const SizedBox(height: 16),
+                              Text(
+                                '${image.likes} likes',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  height: 1.17,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 26),
+                              UserPreview(
+                                homeImages: widget.homeImages,
+                                user: image.user,
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                    placeholder: (context, url) {
-                      return Hero(
-                        tag: image.heroId,
-                        child: CachedNetworkImage(
-                          imageUrl: image.imagePreviewUrl,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
-                        ),
-                      );
-                    },
-                    errorWidget: (_, __, ___) => const Center(
-                      child: Icon(Icons.error),
-                    ),
-                  );
-                },
+                  ],
+                ),
+                placeholder: (_, __) => Hero(
+                  tag: image.heroId,
+                  child: CachedNetworkImage(
+                    imageUrl: image.imagePreviewUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                  ),
+                ),
+                errorWidget: (_, __, ___) => const Center(
+                  child: Icon(Icons.error),
+                ),
               );
             }).toList(),
           );

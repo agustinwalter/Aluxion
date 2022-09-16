@@ -25,8 +25,8 @@ class PhotoPreview extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          CustomPageRoute(
-            builder: (context) => DetailScreen(
+          SlowerPageRoute(
+            builder: (_) => DetailScreen(
               initialPage: index,
               homeImages: homeImages,
             ),
@@ -111,18 +111,16 @@ class PhotoPreview extends StatelessWidget {
               ),
             ),
           ),
-          errorWidget: (_, __, ___) => const Center(
-            child: Icon(Icons.error),
-          ),
+          errorWidget: (_, __, ___) => const Center(child: Icon(Icons.error)),
         ),
       ),
     );
   }
 }
 
-class CustomPageRoute extends MaterialPageRoute {
+class SlowerPageRoute extends MaterialPageRoute {
   @override
   Duration get transitionDuration => const Duration(milliseconds: 500);
 
-  CustomPageRoute({builder}) : super(builder: builder);
+  SlowerPageRoute({builder}) : super(builder: builder);
 }

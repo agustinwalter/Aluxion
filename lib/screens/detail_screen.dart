@@ -27,6 +27,14 @@ class _DetailScreenState extends State<DetailScreen> {
   double _closeTop = 10;
   double _shadowBottom = -20;
 
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _showOrHideDescription();
+    });
+  }
+
   void _showOrHideDescription() {
     if (_descriptionVisible) {
       setState(() {
@@ -52,7 +60,7 @@ class _DetailScreenState extends State<DetailScreen> {
         onTap: _showOrHideDescription,
         child: Consumer<AluxionProvider>(builder: (_, aluxionProvider, __) {
           final images = widget.homeImages
-              ? aluxionProvider.images
+              ? aluxionProvider.homeImages
               : aluxionProvider.userImages;
           return CarouselSlider(
             options: CarouselOptions(
@@ -73,7 +81,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     imageBuilder: (_, imageProvider) => Stack(
                       children: [
                         Hero(
-                          tag: image.id,
+                          tag: image.heroId,
                           child: Image(
                             image: imageProvider,
                             fit: BoxFit.cover,
@@ -122,19 +130,21 @@ class _DetailScreenState extends State<DetailScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Tranquilidad Marina',
-                                    style: TextStyle(
+                                  Text(
+                                    image.description,
+                                    maxLines: 2,
+                                    style: const TextStyle(
                                       fontSize: 42,
                                       height: 1.17,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700,
+                                      overflow: TextOverflow.clip,
                                     ),
                                   ),
                                   const SizedBox(height: 16),
-                                  const Text(
-                                    '200 likes',
-                                    style: TextStyle(
+                                  Text(
+                                    '${image.likes} likes',
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       height: 1.17,
                                       color: Colors.white,
@@ -142,7 +152,10 @@ class _DetailScreenState extends State<DetailScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 26),
-                                  UserPreview(homeImages: widget.homeImages),
+                                  UserPreview(
+                                    homeImages: widget.homeImages,
+                                    user: image.user,
+                                  ),
                                 ],
                               ),
                             ),
@@ -152,7 +165,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                     placeholder: (context, url) {
                       return Hero(
-                        tag: image.id,
+                        tag: image.heroId,
                         child: CachedNetworkImage(
                           imageUrl: image.imagePreviewUrl,
                           fit: BoxFit.cover,

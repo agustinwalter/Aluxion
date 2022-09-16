@@ -15,21 +15,26 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
-  int _nextPage = 0;
+  int _nextPage = 1;
   late AluxionProvider _aluxionProvider;
+  bool _loadingMoreImages = false;
+  static const _topic = 'animals';
 
   @override
   void initState() {
     super.initState();
     _aluxionProvider = Provider.of<AluxionProvider>(context, listen: false);
-    _aluxionProvider.loadHomeImages();
-    _scrollController.addListener(() {
+    _loadMoreImages();
+    _scrollController.addListener(() async {
       // It starts to load the images before reaching the end of the scroll.
       if (_scrollController.offset >
               (_scrollController.position.maxScrollExtent - 512) &&
-          !_scrollController.position.outOfRange) {
+          !_scrollController.position.outOfRange &&
+          !_loadingMoreImages) {
+        setState(() => _loadingMoreImages = true);
         _nextPage++;
-        _aluxionProvider.loadHomeImages(_nextPage);
+        await _loadMoreImages();
+        setState(() => _loadingMoreImages = false);
       }
     });
   }
@@ -38,6 +43,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadMoreImages() async {
+    await _aluxionProvider.loadOnePageOfPhotos(
+      page: _nextPage,
+      urlPath: '/search/photos',
+      extraQueryParameters: {'query': _topic},
+      takeDataFromResultsAttribute: true,
+      imagesOf: ImagesOf.homeScreen,
+    );
   }
 
   @override

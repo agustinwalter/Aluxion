@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:agustin_walter_aluxion/models/unsplash_user.dart';
 import 'package:agustin_walter_aluxion/widgets/list_of_images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,7 +8,9 @@ import '../providers/aluxion_provider.dart';
 import 'home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, required this.user});
+
+  final UnsplashUser user;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -15,22 +18,28 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ScrollController _scrollController = ScrollController();
-  int _nextPage = 0;
+  int _nextPage = 1;
   bool _showAppbarTitle = false;
   late AluxionProvider _aluxionProvider;
+  bool _loadingMoreImages = false;
 
   @override
   void initState() {
     super.initState();
     _aluxionProvider = Provider.of<AluxionProvider>(context, listen: false);
-    _aluxionProvider.loadUserImages();
-    _scrollController.addListener(() {
+    _aluxionProvider.userImages.clear();
+    _loadMoreImages();
+    _scrollController.addListener(() async {
       // It starts to load the images before reaching the end of the scroll.
       if (_scrollController.offset >
               (_scrollController.position.maxScrollExtent - 512) &&
-          !_scrollController.position.outOfRange) {
+          !_scrollController.position.outOfRange &&
+          !_loadingMoreImages) {
+        setState(() => _loadingMoreImages = true);
         _nextPage++;
-        _aluxionProvider.loadUserImages(_nextPage);
+        await _loadMoreImages();
+        setState(() => _loadingMoreImages = false);
+        _nextPage++;
       }
       if (_scrollController.offset > 120) {
         setState(() => _showAppbarTitle = true);
@@ -44,6 +53,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadMoreImages() async {
+    await _aluxionProvider.loadOnePageOfPhotos(
+      page: _nextPage,
+      urlPath: '/users/${widget.user.username}/photos',
+      imagesOf: ImagesOf.anUser,
+    );
   }
 
   @override
@@ -84,9 +101,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         if (_showAppbarTitle)
-                          const Text(
-                            'Norman Foster',
-                            style: TextStyle(
+                          Text(
+                            widget.user.name,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 18,
                               height: 1.17,
@@ -112,25 +129,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 31.5,
-                        child: Image.asset('assets/png/user.png'),
+                        backgroundImage:
+                            NetworkImage(widget.user.profileImageSmall),
+                        backgroundColor: Colors.transparent,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
-                              'Norman Foster',
-                              style: TextStyle(
+                              widget.user.name,
+                              style: const TextStyle(
                                 fontSize: 22,
                                 height: 1.17,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
-                              'British architect whose company, Foster + Partners, maintains an international design practice famous for high-tech architecture.',
-                              style: TextStyle(
+                              widget.user.bio,
+                              style: const TextStyle(
                                 fontSize: 12,
                                 height: 1.17,
                                 fontWeight: FontWeight.w300,

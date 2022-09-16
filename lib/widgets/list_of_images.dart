@@ -13,8 +13,9 @@ class ListOfImages extends StatelessWidget {
     return SliverPadding(
       padding: const EdgeInsets.all(26),
       sliver: Consumer<AluxionProvider>(builder: (_, aluxionProvider, __) {
-        final images =
-            homeImages ? aluxionProvider.images : aluxionProvider.userImages;
+        final images = homeImages
+            ? aluxionProvider.homeImages
+            : aluxionProvider.userImages;
         return SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (_, index) {

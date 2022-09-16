@@ -1,20 +1,18 @@
+import 'package:agustin_walter_aluxion/models/unsplash_user.dart';
 import 'package:flutter/material.dart';
 import '../screens/profile_screen.dart';
 
 class UserPreview extends StatelessWidget {
-  const UserPreview({super.key, required this.homeImages});
+  const UserPreview({super.key, required this.homeImages, required this.user});
 
   final bool homeImages;
+  final UnsplashUser user;
 
   void _navigate(BuildContext context) {
     if (homeImages) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) {
-            return const ProfileScreen();
-          },
-        ),
+        MaterialPageRoute(builder: (_) => ProfileScreen(user: user)),
       );
     } else {
       Navigator.pop(context);
@@ -27,15 +25,16 @@ class UserPreview extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 18.5,
-          child: Image.asset('assets/png/user.png'),
+          backgroundImage: NetworkImage(user.profileImageSmall),
+          backgroundColor: Colors.transparent,
         ),
         const SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Norman Foster',
-              style: TextStyle(
+            Text(
+              user.name,
+              style: const TextStyle(
                 fontSize: 12,
                 height: 1.17,
                 color: Colors.white,

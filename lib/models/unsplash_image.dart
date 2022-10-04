@@ -19,7 +19,7 @@ class UnsplashImage {
   UnsplashImage.fromJSON({required Map json, required Uuid uuid})
       : heroId = uuid.v1(),
         imageUrl = json['urls']['regular'],
-        description = json['description'] ?? 'Surely a cute animal',
+        description = json['description'] ?? 'Surely a cute image',
         likes = json['likes'] ?? 0,
         user = UnsplashUser.fromJSON(json: json['user'] ?? {});
 

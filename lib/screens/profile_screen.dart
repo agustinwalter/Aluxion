@@ -139,15 +139,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(height: 4),
                             Text(
                               widget.user.name,
                               style: const TextStyle(
                                 fontSize: 22,
                                 height: 1.17,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w900,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 10),
                             Text(
                               widget.user.bio,
                               style: const TextStyle(
